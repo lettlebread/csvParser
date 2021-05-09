@@ -5,18 +5,27 @@ import (
 )
 
 type FormatConverter interface {
-	Exec(mapArr []map[string]string) (string, error)
+	Convert(mapArr []map[string]string) (string, error)
 }
 
-func NewFormatConverter(converterType string, args []string) (FormatConverter, error) {
+func NewFormatConverter(args map[string]string) (FormatConverter, error) {
 	var converter FormatConverter
 	var err error
+	var converterType string
+
+	if val, ok := args["e"]; ok {
+		converterType = val
+	}
 
 	switch converterType {
 	case "json":
-		converter = &jsonConverter{args}
+		converter = &jsonConverter{}
 	default:
+	}
+
+	if converter == nil {
 		err = errors.New("Invalid output format type")
 	}
+
 	return converter, err
 }

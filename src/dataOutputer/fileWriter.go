@@ -5,11 +5,11 @@ import (
 )
 
 type fileWriter struct {
-	args []string
+	outputPath string
 }
 
-func (f *fileWriter) Exec(data string) error {
-	newFile, err := os.Create(f.args[0])
+func (f *fileWriter) OutputData(data string) error {
+	newFile, err := os.Create(f.outputPath)
 
 	if err != nil {
 		return err

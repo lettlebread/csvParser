@@ -6,16 +6,14 @@ import (
 )
 
 type FileReader struct {
-	args []string
+	filePath string
 }
 
-func (f *FileReader) Exec() (string, error) {
-	filePath := f.args[0]
-
-	if len(filePath) == 0 {
-		return "", errors.New("Invalid fie path")
+func (f *FileReader) LoadDataString() (string, error) {
+	if len(f.filePath) == 0 {
+		return "", errors.New("Invalid file path")
 	}
 
-	dat, err := ioutil.ReadFile(filePath)
+	dat, err := ioutil.ReadFile(f.filePath)
 	return string(dat), err
 }

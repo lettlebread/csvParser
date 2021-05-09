@@ -20,87 +20,40 @@ var flagDict = map[string][]string{
 
 func main() {
 	flagVals := getFlags()
-	loaderType, loaderArgs := getDataLoaderArgs(flagVals)
-	parserType, parserArgs := getDataParserArgs(flagVals)
-	converterType, converterArgs := getFormatConverterArgs(flagVals)
-	outputerType, outputerArgs := getDataOutputerArgs(flagVals)
 
-	loader, err := dataLoader.NewDataLoader(loaderType, loaderArgs)
+	// get stage instances
+	loader, err := dataLoader.NewDataLoader(flagVals)
 	utils.CheckError(err)
 
-	parser, err := dataParser.NewDataParser(parserType, parserArgs)
+	parser, err := dataParser.NewDataParser(flagVals)
 	utils.CheckError(err)
 
-	converter, err := formatConverter.NewFormatConverter(converterType, converterArgs)
+	converter, err := formatConverter.NewFormatConverter(flagVals)
 	utils.CheckError(err)
 
-	outputer, err := dataOutputer.NewDataOutputer(outputerType, outputerArgs)
+	outputer, err := dataOutputer.NewDataOutputer(flagVals)
 	utils.CheckError(err)
 
-	rawString, err := loader.Exec()
+	// exec
+	rawString, err := loader.LoadDataString()
 	utils.CheckError(err)
 
 	mapArray, err := parser.ParseToMapArray(rawString)
 	utils.CheckError(err)
 
-	formatedStr, err := converter.Exec(mapArray)
+	formatedStr, err := converter.Convert(mapArray)
 	utils.CheckError(err)
 
-	err = outputer.Exec(formatedStr)
+	err = outputer.OutputData(formatedStr)
 	utils.CheckError(err)
 
 	fmt.Printf("Convert success")
 }
 
-func getDataLoaderArgs(args map[string]string) (string, []string) {
-	loaderType := ""
-	loaderArgs := []string{}
-
-	if val, ok := args["f"]; ok {
-		loaderType = "file"
-		loaderArgs = append(loaderArgs, val)
-	}
-
-	return loaderType, loaderArgs
-}
-
-func getDataParserArgs(args map[string]string) (string, []string) {
-	parserType := ""
-	parserArgs := []string{}
-
-	if val, ok := args["m"]; ok {
-		parserType = val
-	}
-
-	return parserType, parserArgs
-}
-
-func getFormatConverterArgs(args map[string]string) (string, []string) {
-	converterType := ""
-	converterArgs := []string{}
-
-	if val, ok := args["e"]; ok {
-		converterType = val
-	}
-
-	return converterType, converterArgs
-}
-
-func getDataOutputerArgs(args map[string]string) (string, []string) {
-	outputerType := ""
-	outputerArgs := []string{}
-
-	if val, ok := args["o"]; ok {
-		outputerType = "file"
-		outputerArgs = append(outputerArgs, val)
-	}
-
-	return outputerType, outputerArgs
-}
-
 func getFlags() map[string]string {
 	flagVal := map[string]string{}
 	flagPtr := map[string]*string{}
+
 	for key, flagInfo := range flagDict {
 		flagPtr[key] = flag.String(key, flagInfo[1], flagInfo[2])
 	}

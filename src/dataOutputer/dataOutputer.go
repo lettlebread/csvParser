@@ -5,16 +5,22 @@ import (
 )
 
 type DataOutputer interface {
-	Exec(data string) error
+	OutputData(data string) error
 }
 
-func NewDataOutputer(outputType string, args []string) (DataOutputer, error) {
+func NewDataOutputer(args map[string]string) (DataOutputer, error) {
 	var outputer DataOutputer
 	var err error
+	var outputerType, outputPath string
 
-	switch outputType {
+	if val, ok := args["o"]; ok {
+		outputerType = "file"
+		outputPath = val
+	}
+
+	switch outputerType {
 	case "file":
-		outputer = &fileWriter{args}
+		outputer = &fileWriter{outputPath}
 	default:
 		err = errors.New("Invalid output data type")
 	}

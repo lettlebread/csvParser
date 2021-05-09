@@ -4,9 +4,7 @@ import (
 	"fmt"
 )
 
-type csvParser struct {
-	args []string
-}
+type csvParser struct{}
 
 func (c *csvParser) ParseToMapArray(data string) ([]map[string]string, error) {
 	lineParser := setLineParser("\n")
