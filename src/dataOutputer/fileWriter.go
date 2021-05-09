@@ -10,6 +10,7 @@ type fileWriter struct {
 
 func (f *fileWriter) OutputData(data string) error {
 	newFile, err := os.Create(f.outputPath)
+	defer newFile.Close()
 
 	if err != nil {
 		return err
@@ -22,7 +23,6 @@ func (f *fileWriter) OutputData(data string) error {
 	}
 
 	newFile.Sync()
-	defer newFile.Close()
 
 	return err
 }

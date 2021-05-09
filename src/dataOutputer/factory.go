@@ -8,21 +8,21 @@ type DataOutputer interface {
 	OutputData(data string) error
 }
 
-func NewDataOutputer(args map[string]string) (DataOutputer, error) {
-	var outputer DataOutputer
+func New(args map[string]string) (DataOutputer, error) {
 	var err error
 	var outputerType, outputPath string
 
-	if val, ok := args["o"]; ok {
+	if val, ok := args["o"]; ok && val != "" {
 		outputerType = "file"
 		outputPath = val
+	} else {
+		return nil, errors.New("Invalid output data path")
 	}
 
 	switch outputerType {
 	case "file":
-		outputer = &fileWriter{outputPath}
+		return &fileWriter{outputPath}, err
 	default:
-		err = errors.New("Invalid output data type")
+		return nil, errors.New("Invalid output data type")
 	}
-	return outputer, err
 }

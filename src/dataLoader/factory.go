@@ -8,25 +8,21 @@ type DataLoader interface {
 	LoadDataString() (string, error)
 }
 
-func NewDataLoader(args map[string]string) (DataLoader, error) {
-	var reader DataLoader
+func New(args map[string]string) (DataLoader, error) {
 	var err error
 	var loaderType, filePath string
 
-	if val, ok := args["f"]; ok {
+	if val, ok := args["f"]; ok && val != "" {
 		loaderType = "file"
 		filePath = val
+	} else {
+		return nil, errors.New("Invalid file path")
 	}
 
 	switch loaderType {
 	case "file":
-		reader = &FileReader{filePath}
+		return &FileReader{filePath}, err
 	default:
+		return nil, errors.New("Invalid loader type")
 	}
-
-	if reader == nil {
-		err = errors.New("Invalid loader type")
-	}
-
-	return reader, err
 }

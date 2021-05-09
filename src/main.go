@@ -4,11 +4,11 @@ import (
 	"flag"
 	"fmt"
 
-	"example.com/my/dataLoader"
-	"example.com/my/dataOutputer"
-	"example.com/my/dataParser"
-	"example.com/my/formatConverter"
-	"example.com/my/utils"
+	"example.com/my/parser/dataLoader"
+	"example.com/my/parser/dataOutputer"
+	"example.com/my/parser/dataParser"
+	"example.com/my/parser/formatConverter"
+	"example.com/my/parser/utils"
 )
 
 var flagDict = map[string][]string{
@@ -22,26 +22,26 @@ func main() {
 	flagVals := getFlags()
 
 	// get stage instances
-	loader, err := dataLoader.NewDataLoader(flagVals)
+	loader, err := dataLoader.New(flagVals)
 	utils.CheckError(err)
 
-	parser, err := dataParser.NewDataParser(flagVals)
+	parser, err := dataParser.New(flagVals)
 	utils.CheckError(err)
 
-	converter, err := formatConverter.NewFormatConverter(flagVals)
+	converter, err := formatConverter.New(flagVals)
 	utils.CheckError(err)
 
-	outputer, err := dataOutputer.NewDataOutputer(flagVals)
+	outputer, err := dataOutputer.New(flagVals)
 	utils.CheckError(err)
 
 	// exec
 	rawString, err := loader.LoadDataString()
 	utils.CheckError(err)
 
-	mapArray, err := parser.ParseToMapArray(rawString)
+	recordArray, err := parser.ParseToMapArray(rawString)
 	utils.CheckError(err)
 
-	formatedStr, err := converter.Convert(mapArray)
+	formatedStr, err := converter.Convert(recordArray)
 	utils.CheckError(err)
 
 	err = outputer.OutputData(formatedStr)

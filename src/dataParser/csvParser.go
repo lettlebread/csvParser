@@ -7,8 +7,8 @@ import (
 type csvParser struct{}
 
 func (c *csvParser) ParseToMapArray(data string) ([]map[string]string, error) {
-	lineParser := setLineParser("\n")
-	fieldParser := setFieldParser(",")
+	lineParser := newLineParser("\n")
+	fieldParser := newFieldParser(",")
 	res := make([]map[string]string, 0)
 
 	lines := lineParser(data)
