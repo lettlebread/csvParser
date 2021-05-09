@@ -1,0 +1,8 @@
+**/*
+**/*.json
+!data/*
+!**/*.go
+!**/*.mod
+!launch.json
+!**/
+!.gitignore
