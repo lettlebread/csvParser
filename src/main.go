@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 
+	"example.com/my/parser/constants"
 	"example.com/my/parser/dataLoader"
 	"example.com/my/parser/dataOutputer"
 	"example.com/my/parser/dataParser"
@@ -11,15 +12,9 @@ import (
 	"example.com/my/parser/utils"
 )
 
-var flagDict = map[string][]string{
-	"f": []string{"string", "", "path of source file"},
-	"m": []string{"string", "", "format of source data"},
-	"o": []string{"string", "", "path of output data"},
-	"e": []string{"string", "", "format of output data"},
-}
-
 func main() {
-	flagVals := getFlags()
+	flagVals, err := getFlags(constants.FlagDict)
+	utils.CheckError(err)
 
 	// get stage instances
 	loader, err := dataLoader.New(flagVals)
@@ -50,7 +45,7 @@ func main() {
 	fmt.Printf("Convert success")
 }
 
-func getFlags() map[string]string {
+func getFlags(flagDict map[string][3]string) (map[string]string, error) {
 	flagVal := map[string]string{}
 	flagPtr := map[string]*string{}
 
@@ -64,5 +59,5 @@ func getFlags() map[string]string {
 		flagVal[key] = *ptr
 	}
 
-	return flagVal
+	return flagVal, nil
 }
